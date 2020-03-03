@@ -1,6 +1,8 @@
-`import pygame, sys, time, random
-from pygame.locals import *
+#Noah Omordia
 
+
+import pygame, sys, time, random
+from pygame.locals import *
 pygame.init()
 mainClock = pygame.time.Clock()
 
@@ -27,9 +29,6 @@ growp = False
 shrinkp = False
 score = 0
 fpizza = []
-#for i in range(30):
- #   fpizza.append(pygame.Rect(random.randint(0, 480), random.randint(0, 480), 20, 20))
-
 black = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
@@ -38,15 +37,27 @@ blue = (0, 0, 255)
 
 
 x = 84
+maxpizza = 15
 y = 72
 x2 = 30
 y2 = 30
-player = pygame.Rect(278  , 264, x, y)
+player = pygame.Rect(278, 264, x, y)
 pizza = pygame.Rect(288, 264, x2, y2)
 playerImage = pygame.image.load('PixelArt.png')
 pizzaImage = pygame.image.load('PngItem_3397262.png')
+playerImageStretch = pygame.transform.scale(playerImage, (x, y))
+pizzaImageStretch = pygame.transform.scale(pizzaImage, (x2, y2))
+
+for i in range(15):
+    fpizza.append(pygame.Rect(random.randint(0, 580), random.randint(0, 580), 30, 30))
+
+if (len(fpizza)) < maxpizza:
+    fpizza.append(pizzaImageStretch)
 
 while True:
+
+    windowSurface.fill(white)
+
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -84,68 +95,72 @@ while True:
         if event.key == K_ESCAPE:
             pygame.quit()
             sys.exit()
-
+    if player.left <= 0:
+        player.left += 10
+    if player.top <= 0:
+        player.top += 10
+    if player.bottom >= 600:
+        player.bottom -= 10
+    if player.right >= 600:
+        player.right -= 10
     if moveUp == True:
         player.top -= movementSpeed
         if left == True:
-            playerImage = pygame.transform.rotate(playerImage, -90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, -90)
             left = False
         if right == True:
-            playerImage = pygame.transform.rotate(playerImage, 90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 90)
             right = False
         if down == True:
-            playerImage = pygame.transform.flip(playerImage, False, True)
+            playerImageStretch = pygame.transform.flip(playerImageStretch, False, True)
             down = False
         up = True
 
     if moveDown == True:
         player.top += movementSpeed
         if left == True:
-            playerImage = pygame.transform.rotate(playerImage, 90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 90)
             left = False
         if right == True:
-            playerImage = pygame.transform.rotate(playerImage, -90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, -90)
             right = False
         if up == True:
-            playerImage = pygame.transform.flip(playerImage, False, True)
+            playerImageStretch = pygame.transform.flip(playerImageStretch, False, True)
             up = False
         down = True
 
     if moveLeft == True:
         player.left -= movementSpeed
         if right == True:
-            playerImage = pygame.transform.rotate(playerImage, 180)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 180)
             right = False
         if up == True:
-            playerImage = pygame.transform.rotate(playerImage, 90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 90)
             up = False
         if down == True:
-            playerImage = pygame.transform.rotate(playerImage, -90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, -90)
             down = False
         left = True
     if moveRight == True:
         player.right += movementSpeed
         if left == True:
-            playerImage = pygame.transform.rotate(playerImage, 180)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 180)
             left = False
         if up == True:
-            playerImage = pygame.transform.rotate(playerImage, -90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, -90)
             up = False
         if down == True:
-            playerImage = pygame.transform.rotate(playerImage, 90)
+            playerImageStretch = pygame.transform.rotate(playerImageStretch, 90)
             down = False
         right = True
 
-    for i in len(fpizza):
-        pygame.draw.rect(windowSurface,white,fpizza)
-    if x == pizzaImage and y == pizzaImage:
+    if x == pizzaImageStretch and y == pizzaImageStretch:
         score += 1
 
     for slice in fpizza:
         if player.colliderect(slice):
             fpizza.remove(slice)
-    for slice in fpizza:
-        windowSurface.blit(pizzaImage,slice)
+            score += 1
 
     if grow == True:
         x += 1
@@ -160,13 +175,7 @@ while True:
         x2 -= 1
         y2 -= 1
 
-    windowSurface.fill(white)
 
-    playerImageStretch = pygame.transform.scale(playerImage, (x, y))
-    pizzaImageStretch =  pygame.transform.scale(pizzaImage,(x2,y2))
-
-    for i in range(30):
-        fpizza.append(pygame.Rect(random.randint(0, 480), random.randint(0, 480), 20, 20))
 
     font = pygame.font.SysFont("none", 24)
     scoreText = "Score: " + str(score)
@@ -174,7 +183,8 @@ while True:
     windowSurface.blit(text2, (width - 100, 0))
 
     windowSurface.blit(playerImageStretch, player)
-    windowSurface.blit(pizzaImageStretch, pizza)
+    for slice in fpizza:
+        windowSurface.blit(pizzaImageStretch, slice)
 
     pygame.display.update()
     mainClock.tick(180)
