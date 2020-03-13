@@ -6,11 +6,11 @@ from pygame.locals import *
 pygame.init()
 mainClock = pygame.time.Clock()
 
-width = 600
-height = 600
+width = 800
+height = 800
 windowSurface = pygame.display.set_mode((width, height), 0, 32)
 
-pygame.display.set_caption('chomp')
+pygame.display.set_caption('hungry hungry pygame')
 
 movementSpeed = 10
 
@@ -49,7 +49,7 @@ playerImageStretch = pygame.transform.scale(playerImage, (x, y))
 pizzaImageStretch = pygame.transform.scale(pizzaImage, (x2, y2))
 
 for i in range(15):
-    fpizza.append(pygame.Rect(random.randint(0, 580), random.randint(0, 580), 30, 30))
+    fpizza.append(pygame.Rect(random.randint(0, 780), random.randint(0, 780), 30, 30))
 
 if (len(fpizza)) < maxpizza:
     fpizza.append(pizzaImageStretch)
@@ -99,9 +99,9 @@ while True:
         player.left += 10
     if player.top <= 0:
         player.top += 10
-    if player.bottom >= 600:
+    if player.bottom >= 800:
         player.bottom -= 10
-    if player.right >= 600:
+    if player.right >= 800:
         player.right -= 10
     if moveUp == True:
         player.top -= movementSpeed
