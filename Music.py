@@ -10,6 +10,10 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+l = 100
+w = 100
+l2 = 100
+w2 = 100
 x = 100
 y = 50
 xb = 100
@@ -35,16 +39,26 @@ redplay = False
 blackquiet = False
 Volumeup = False
 Volumedown = False
-
+chompsound = False
+tastysound = False
 
 pygame.display.set_caption('music')
-
+#t∆sty.mp3
 width = 800
 height = 400
 v = .5
 windowSurface = pygame.display.set_mode((width, height), 0, 32)
-
 pygame.mixer.music.load('BlippyTrance.mp3')
+playerImage = pygame.image.load('PixelArt.png')
+pizzaImage = pygame.image.load('PngItem_3397262.png')
+chomps = pygame.mixer.Sound('t∆sty.mp3')
+tasty = pygame.mixer.Sound('Noaheatsfood.mp3')
+player = pygame.Rect(278, 264, l, w)
+pizza = pygame.Rect(478, 264, l2, w2)
+playerImageStretch = pygame.transform.scale(playerImage, (100, 100))
+pizzaImageStretch = pygame.transform.scale(pizzaImage, (100, 100))
+
+
 pygame.mixer.music.play(-1, 0)
 pygame.mixer.music.set_volume(v)
 
@@ -65,19 +79,19 @@ while True:
     greenRect = pygame.draw.rect(windowSurface, green, (640, 100, xg, yg))
 
     if event.type == MOUSEBUTTONDOWN:
-        if event.pos[0]>= blueRect.left and event.pos[0] <= blueRect.right:
+        if event.pos[0]>= blueRect.left and event.pos[0] <= blueRect.right and event.pos[1] >= blueRect.top and event.pos[1] <= blueRect.bottom:
             growblue= True
             pygame.mixer.music.pause()
     if event.type == MOUSEBUTTONDOWN:
-        if event.pos[0] >= blackRect.left and event.pos[0] <= blackRect.right:
+        if event.pos[0] >= blackRect.left and event.pos[0] <= blackRect.right and event.pos[1] >= blackRect.top and event.pos[1] <= blackRect.bottom:
             growblack = True
             Volumedown = True
     if event.type == MOUSEBUTTONDOWN:
-        if event.pos[0] >= redRect.left and event.pos[0] <= redRect.right:
+        if event.pos[0] >= redRect.left and event.pos[0] <= redRect.right and event.pos[1] >= redRect.top and event.pos[1] <= redRect.bottom:
             growred = True
             pygame.mixer.music.unpause()
     if event.type == MOUSEBUTTONDOWN:
-        if event.pos[0] >= greenRect.left and event.pos[0] <= greenRect.right:
+        if event.pos[0] >= greenRect.left and event.pos[0] <= greenRect.right and event.pos[1] >= greenRect.top and event.pos[1] <= greenRect.bottom:
             growgreen = True
             Volumeup = True
     if event.type == MOUSEBUTTONUP:
@@ -92,7 +106,16 @@ while True:
     if event.type == MOUSEBUTTONUP:
         if event.pos[0] >= blueRect.left and event.pos[0] <= blueRect.right:
             shrinkblue = True
-
+    if event.type == MOUSEBUTTONDOWN:
+        if event.pos[0] >= player.left and event.pos[0] <= player.right and event.pos[1] >= player.top and event.pos[1] <= player.bottom:
+            chompsound = True
+            l += 1
+            w += 1
+    if event.type == MOUSEBUTTONDOWN:
+        if event.pos[0] >= pizza.left and event.pos[0] <= pizza.right and event.pos[1] >= pizza.top and event.pos[1] <= pizza.bottom:
+            tastysound = True
+            l2 += 1
+            w2 += 1
     if growblue == True:
         x = 200
         y = 100
@@ -133,6 +156,12 @@ while True:
         v -= .1
         Volumeup = False
         Volumedown = False
+    if chompsound == True:
+        chomps.play()
+    if tastysound == True:
+        tasty.play()
+    windowSurface.blit(playerImageStretch, player)
+    windowSurface.blit(pizzaImageStretch, pizza)
 
     print(v)
     pygame.display.update()
